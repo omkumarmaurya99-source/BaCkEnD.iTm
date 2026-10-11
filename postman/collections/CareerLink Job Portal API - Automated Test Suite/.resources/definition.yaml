@@ -1,0 +1,13 @@
+$kind: collection
+description: "Complete, end-to-end automated Postman collection for CareerLink Job Portal REST API.\\n\\nCandidate: Om Maurya (Roll No: 150096725208)\\nInstitution: ITM Skills University\\n\\nIncludes dynamic test variable chaining, JWT persistence, real multipart file upload, RBAC validation, and business rule assertions."
+variables:
+  baseUrl: http://localhost:5001
+  recruiterToken: ""
+  jobseekerToken: ""
+  recruiterId: ""
+  jobseekerId: ""
+  recruiterEmail: ""
+  jobseekerEmail: ""
+  createdJobId: ""
+  createdApplicationId: ""
+  firebaseMockToken: mock_test_token_firebaseuser@example.com

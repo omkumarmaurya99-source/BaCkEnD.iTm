@@ -1,0 +1,1 @@
+// Defines booking endpoints.

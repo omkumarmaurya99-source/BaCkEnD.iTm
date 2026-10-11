@@ -1,0 +1,39 @@
+$kind: http-request
+url: "{{baseUrl}}/api/auth/register"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+      "name": "Rahul Seeker",
+      "email": "{{jobseekerEmail}}",
+      "password": "password123",
+      "role": "jobseeker",
+      "skills": [
+        "javascript",
+        "node.js",
+        "react",
+        "mongodb",
+        "docker"
+      ]
+    }
+scripts:
+  - type: beforeRequest
+    code: |-
+      var timestamp = Date.now();
+      pm.collectionVariables.set("jobseekerEmail", "jobseeker_" + timestamp + "@gmail.com");
+    language: text/javascript
+  - type: afterResponse
+    code: |-
+      pm.test("Jobseeker registered successfully (201)", function () { pm.response.to.have.status(201); });
+      var json = pm.response.json();
+      pm.test("Contains CareerLink JWT & Jobseeker ID", function () {
+        pm.expect(json.success).to.be.true;
+        pm.expect(json.data).to.have.property("token");
+        pm.collectionVariables.set("jobseekerToken", json.data.token);
+        pm.collectionVariables.set("jobseekerId", json.data.user._id);
+      });
+    language: text/javascript
+order: 2000

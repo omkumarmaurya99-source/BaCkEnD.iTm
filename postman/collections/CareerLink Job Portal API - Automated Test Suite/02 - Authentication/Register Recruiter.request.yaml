@@ -1,0 +1,33 @@
+$kind: http-request
+url: "{{baseUrl}}/api/auth/register"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+      "name": "Priya Recruiter",
+      "email": "{{recruiterEmail}}",
+      "password": "password123",
+      "role": "recruiter",
+      "company": "TechCorp Global"
+    }
+scripts:
+  - type: beforeRequest
+    code: |-
+      var timestamp = Date.now();
+      pm.collectionVariables.set("recruiterEmail", "recruiter_" + timestamp + "@techcorp.com");
+    language: text/javascript
+  - type: afterResponse
+    code: |-
+      pm.test("Recruiter registered successfully (201)", function () { pm.response.to.have.status(201); });
+      var json = pm.response.json();
+      pm.test("Contains CareerLink JWT & Recruiter ID", function () {
+        pm.expect(json.success).to.be.true;
+        pm.expect(json.data).to.have.property("token");
+        pm.collectionVariables.set("recruiterToken", json.data.token);
+        pm.collectionVariables.set("recruiterId", json.data.user._id);
+      });
+    language: text/javascript
+order: 1000

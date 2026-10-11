@@ -1,0 +1,14 @@
+$kind: http-request
+url: "{{baseUrl}}/api/recommendations"
+method: GET
+headers:
+  Authorization: Bearer {{jobseekerToken}}
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test("Status is 200 OK", function () { pm.response.to.have.status(200); });
+      var json = pm.response.json();
+      pm.expect(json.data).to.have.property("recommendations");
+      pm.expect(Array.isArray(json.data.recommendations)).to.be.true;
+    language: text/javascript
+order: 3000

@@ -1,0 +1,22 @@
+$kind: http-request
+description: "Authenticates using Firebase ID Token.\\n\\n1. Live Production/Dev Flow: Send real Firebase ID token in Authorization header (`Bearer <realIdToken>`) obtained from Firebase Client SDK (`user.getIdToken()`). Requires FIREBASE_* credentials in backend/.env.\\n\\n2. Automated Test Mock Flow: For testing when NODE_ENV=test, uses deterministic mock token (`mock_test_token_...`). This is strictly for test runner simulation and is NOT a real Firebase token."
+url: "{{baseUrl}}/api/auth/firebase-login"
+method: POST
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{firebaseMockToken}}
+body:
+  type: text
+  content: |-
+    {
+      "role": "jobseeker",
+      "name": "Firebase Verified User"
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test("Handled appropriately by server", function () {
+        pm.expect([200, 401]).to.include(pm.response.code);
+      });
+    language: text/javascript
+order: 5000

@@ -1,0 +1,21 @@
+$kind: http-request
+url: "{{baseUrl}}/api/auth/login"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+      "email": "{{recruiterEmail}}",
+      "password": "password123"
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test("Status code is 200 OK", function () { pm.response.to.have.status(200); });
+      var json = pm.response.json();
+      pm.expect(json.success).to.be.true;
+      if (json.data && json.data.token) { pm.collectionVariables.set("recruiterToken", json.data.token); }
+    language: text/javascript
+order: 3000

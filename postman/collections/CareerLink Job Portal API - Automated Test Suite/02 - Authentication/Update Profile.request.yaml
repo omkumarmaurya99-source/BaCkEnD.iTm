@@ -1,0 +1,30 @@
+$kind: http-request
+url: "{{baseUrl}}/api/auth/profile"
+method: PUT
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{jobseekerToken}}
+body:
+  type: text
+  content: |-
+    {
+      "name": "Rahul Seeker Updated",
+      "bio": "Full Stack Engineer specializing in Node.js and React",
+      "location": "Mumbai, India",
+      "skills": [
+        "javascript",
+        "node.js",
+        "react",
+        "mongodb",
+        "docker",
+        "typescript"
+      ]
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test("Status is 200 OK", function () { pm.response.to.have.status(200); });
+      var json = pm.response.json();
+      pm.expect(json.data.user.name).to.eql("Rahul Seeker Updated");
+    language: text/javascript
+order: 7000

@@ -1,0 +1,44 @@
+$kind: http-request
+url: "{{baseUrl}}/api/jobs"
+method: POST
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{recruiterToken}}
+body:
+  type: text
+  content: |-
+    {
+      "title": "Senior Backend Developer (Node.js/Express)",
+      "company": "TechCorp Global",
+      "description": "We are seeking a senior backend engineer to design scalable microservices and APIs.",
+      "location": "Bengaluru, India (Hybrid)",
+      "jobType": "Full-time",
+      "salary": {
+        "min": 1200000,
+        "max": 2000000,
+        "currency": "INR"
+      },
+      "requirements": [
+        "3+ years experience with Node.js and Express",
+        "Strong proficiency in MongoDB and indexing",
+        "Knowledge of Docker and CI/CD pipelines"
+      ],
+      "skillsRequired": [
+        "node.js",
+        "express",
+        "mongodb",
+        "docker",
+        "javascript"
+      ],
+      "experienceLevel": "Senior",
+      "openings": 2
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test("Job created successfully (201)", function () { pm.response.to.have.status(201); });
+      var json = pm.response.json();
+      pm.expect(json.data).to.have.property("job");
+      pm.collectionVariables.set("createdJobId", json.data.job._id);
+    language: text/javascript
+order: 1000

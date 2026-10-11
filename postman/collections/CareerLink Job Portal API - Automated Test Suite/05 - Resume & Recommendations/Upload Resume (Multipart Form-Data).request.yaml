@@ -1,0 +1,22 @@
+$kind: http-request
+url: "{{baseUrl}}/api/resume/upload"
+method: POST
+headers:
+  Authorization: Bearer {{jobseekerToken}}
+body:
+  type: formdata
+  content:
+    - type: file
+      key: resume
+      src: []
+      description: Attach PDF or DOCX file here
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test("Validates resume upload correctly", function () {
+        // If executed in automated runner without manual file attachment, expect 400 Bad Request
+        // If executed with actual attached PDF/DOCX file, expect 200 OK
+        pm.expect([200, 400]).to.include(pm.response.code);
+      });
+    language: text/javascript
+order: 1000

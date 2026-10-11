@@ -1,0 +1,13 @@
+$kind: http-request
+url: "{{baseUrl}}/api/applications/job/{{createdJobId}}"
+method: GET
+headers:
+  Authorization: Bearer {{recruiterToken}}
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test("Status is 200 OK", function () { pm.response.to.have.status(200); });
+      var json = pm.response.json();
+      pm.expect(Array.isArray(json.data.applications)).to.be.true;
+    language: text/javascript
+order: 3000
